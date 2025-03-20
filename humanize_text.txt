@@ -1,0 +1,31 @@
+from transformers import pipeline
+
+# Load the T5 model for paraphrasing
+paraphraser = pipeline("text2text-generation", model="t5-small")
+
+# Define humanize_text function
+def humanize_text(text):
+    """
+    Takes input text and rewrites it in a human-like way.
+    """
+    response = paraphraser(f"paraphrase: {text}", max_length=100, do_sample=True)
+    humanized_text = response[0]['generated_text']
+    
+    # Clean the response by removing the "paraphrase: " part
+    if humanized_text.lower().startswith("paraphrase:"):
+        humanized_text = humanized_text[len("paraphrase: "):]
+    
+    return humanized_text
+
+# If you're using a more advanced function, make sure to call the correct one
+def humanize_text_advanced(text):
+    # Call the previously defined function
+    humanized = humanize_text(text)  # Paraphrase first
+    # Additional transformations can go here
+    return humanized
+
+# Test the function
+if __name__ == "__main__":
+    text = "AI-generated content is often predictable and lacks human touch."
+    print("Original Text: ", text)
+    print("Humanized Text: ", humanize_text_advanced(text))
